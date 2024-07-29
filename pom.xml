@@ -69,10 +69,12 @@
 
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
 		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.12.6</version>
+			<groupId>io.fusionauth</groupId>
+			<artifactId>fusionauth-jwt</artifactId>
+			<version>5.3.3</version>
 		</dependency>
+
+
 		<!--https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
