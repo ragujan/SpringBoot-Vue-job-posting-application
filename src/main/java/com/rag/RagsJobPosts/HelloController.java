@@ -10,7 +10,7 @@ public class HelloController {
 	
 	@GetMapping("/")
 	public String index(Model model) {
-		return "hey";
+		return "hey dddd";
 	}
 
 }
