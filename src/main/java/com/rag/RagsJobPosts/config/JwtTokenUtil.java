@@ -1,10 +1,8 @@
 package com.rag.RagsJobPosts.config;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +48,6 @@ public class JwtTokenUtil implements Serializable {
 		Object object = getAllClaimsFromToken(token).get("exp");
 		ZonedDateTime expiryDateTime = (ZonedDateTime) object;
 		return expiryDateTime;
-
 
 	}
 

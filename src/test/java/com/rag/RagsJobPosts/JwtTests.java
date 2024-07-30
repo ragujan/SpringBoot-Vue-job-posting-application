@@ -2,10 +2,8 @@ package com.rag.RagsJobPosts;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.aot.DisabledInAotMode;
-import org.springframework.beans.factory.annotation.Value;
 import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.hmac.HMACSigner;
 import io.fusionauth.jwt.hmac.HMACVerifier;
@@ -25,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisabledInNativeImage
 @DisabledInAotMode
 @SpringBootTest
-class RagsJobPostsApplicationTests {
+class JwtTests {
 	@Value("${jwt.secret}")
 	// private String secret2;
 
