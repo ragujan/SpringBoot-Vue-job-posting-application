@@ -1,5 +1,11 @@
 package com.rag.RagsJobPosts.models;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -7,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "users")
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity  implements UserDetails {
 
 	@Column(name = "username")
 	@NotBlank
@@ -68,6 +74,12 @@ public class UserEntity extends BaseEntity {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return List.of();
 	}
 
 }

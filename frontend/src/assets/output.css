@@ -570,7 +570,7 @@ video {
   border-width: 1px;
 }
 
-.bg-red-600 {
+.bg-pink-300 {
   --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+  background-color: rgb(249 168 212 / var(--tw-bg-opacity));
 }

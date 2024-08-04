@@ -1,0 +1,70 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Signup</h1>
+    <form >
+        <span>Username</span>
+        <input type="text" id="username">
+        <br>
+        <span>Password</span>
+        <input type="password" id="password">
+        <br>
+        <span>Email</span>
+        <input type="text" id="email">
+        <br>
+        <span>Company Name</span>
+        <input type="text" id="companyName">
+        <br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <script>
+
+        function submitForm() {
+            // Get form values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const companyName = document.getElementById('companyName').value;
+
+            // Create a data object
+            const data = {
+                username: username,
+                password: password,
+                email: email,
+                companyName: companyName
+            };
+            console.log("data "+JSON.stringify(data))
+            console.log("data "+data)
+            // return;
+
+            // Send POST request using fetch
+            fetch('/req/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Handle successful response
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Handle error response
+                });
+        }
+
+    </script>
+</body>
+
+
+</html>

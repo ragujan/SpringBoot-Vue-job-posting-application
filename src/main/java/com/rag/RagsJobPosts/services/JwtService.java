@@ -1,13 +1,16 @@
-package com.rag.RagsJobPosts.config;
+package com.rag.RagsJobPosts.services;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
@@ -15,18 +18,18 @@ import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.hmac.HMACSigner;
 import io.fusionauth.jwt.hmac.HMACVerifier;
 
-@Component
-public class JwtTokenUtil implements Serializable {
-
+@Service
+public class JwtService implements Serializable {
 	private static final long serialVersionUID = -2550185165626007488L;
 	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
 	@Value("${jwt.secret}")
 	private String secret;
 
-	// retrieve user from jwt token
-	public String getEmailFromToken(String token) {
-		return getClaimFromToken(token, "email").toString();
+
+
+	public String getUsernameFromToken(String token) {
+		return getClaimFromToken(token, "username").toString();
 	}
 
 	// retrieve all claims from a token
@@ -64,11 +67,8 @@ public class JwtTokenUtil implements Serializable {
 
 		// Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and
 		// expiration(exp)
-		JWT jwt = new JWT().setIssuer("www.ragbag.com")
-				.setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-				.setSubject(subject)
-				.addClaim("user", claims.get("user"))
-				.addClaim("email", claims.get("email"))
+		JWT jwt = new JWT().setIssuer("www.ragbag.com").setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
+				.setSubject(subject).addClaim("user", claims.get("user")).addClaim("username", claims.get("username"))
 				.setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
 
 		String encodedJWT = JWT.getEncoder().encode(jwt, signer);
@@ -76,16 +76,16 @@ public class JwtTokenUtil implements Serializable {
 
 	}
 
-	String generateToken(String email) {
+	public String generateToken(String username) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("user", "admin");
-		claims.put("email", email);
+		claims.put("username", username);
 		String subject = "testSubject";
 		return doGenerateToken(claims, subject);
 	}
 
-	public Boolean validateToken(String token, String email) {
-		final String retrievedEmail = getEmailFromToken(token);
-		return (email.equals(retrievedEmail) && !isTokenExpired(token));
+	public Boolean validateToken(String token, String username) {
+		final String retrievedUsername = getUsernameFromToken(token);
+		return (username.equals(retrievedUsername) && !isTokenExpired(token));
 	}
 }
