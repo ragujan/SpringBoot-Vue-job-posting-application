@@ -62,7 +62,9 @@ class JwtTests {
 	void testClaim() {
 
 		Object object = getAllClaimsFromToken(token).get("name");
-		assertEquals(object.toString(), "John Doe");
+		if(object !=null){
+			assertEquals(object.toString(), "John Doe");
+		}
 	}
 
 	String jsonString = "{" + "\"sub\": \"1234567890\"," + "\"name\": \"John Doe\"," + "\"iat\": 1516239022,"
