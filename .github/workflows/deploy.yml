@@ -36,3 +36,16 @@ jobs:
           dockerfile: Dockerfile
           push: true
           tags: ${{secrets.DOCKER_USERNAME}}/job-posting-app-backend:latest
+
+      - name:  Deploy to VPS
+        env:
+          app_name: job-posting-app-backend
+        run: | 
+          sshpass -p ${{secrets.SSH_PASSWORD}} ssh -o StrictHostKeyChecking=no ${{secrets.USERNAME_AND_IP_ADDRESS}} << EOF
+          #Stop the existing container
+          docker stop "$app_name" || true
+          docker rm "$app_name" || true 
+          docker pull ${{secrets.DOCKER_USERNAME}}/"$app_name":latest
+          docker run --name "$app_name" -d -p 8080:8080 -p  \
+          ${{secrets.DOCKER_USERNAME}}/"$app_name":latest
+          EOF           
