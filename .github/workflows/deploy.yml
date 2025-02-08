@@ -35,4 +35,4 @@ jobs:
           context: .
           dockerfile: Dockerfile
           push: true
-          tags: ragjn/job-posting-app-backend:latest
+          tags: ${{secrets.DOCKER_USERNAME}}/job-posting-app-backend:latest
