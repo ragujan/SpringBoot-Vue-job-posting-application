@@ -41,17 +41,14 @@ jobs:
         env:
           APP_NAME: job-posting-app-backend
         run: |
-#          sshpass -p "${{ secrets.SSH_PASSWORD }}" \
-#          ssh -o StrictHostKeyChecking=no \
-#          "${{ secrets.USERNAME_AND_IP_ADDRESS }}" << 'EOF'
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.USERNAME_AND_IP_ADDRESS }}" << 'EOF'
           # Stop the existing container
           docker stop "$APP_NAME" || true
-          docker rm "$APP_NAME" || true
-
+          docker rm "$APP_NAME" || true 
+          
           # Pull the latest Docker image
           docker pull "${{ secrets.DOCKER_USERNAME }}/$APP_NAME:latest"
-
+          
           # Run the container
           docker run --name "$APP_NAME" -d -p 8080:8080 \
           "${{ secrets.DOCKER_USERNAME }}/$APP_NAME:latest"
