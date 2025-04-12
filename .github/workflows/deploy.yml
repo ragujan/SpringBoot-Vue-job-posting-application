@@ -1,4 +1,4 @@
-name: build and deploy city app backend
+name: build and deploy job posting app backend
 
 on:
   push:
