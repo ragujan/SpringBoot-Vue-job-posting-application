@@ -63,7 +63,7 @@ jobs:
           
           if [ "${{ github.ref_name }}" = "dev" ]; then
             PROFILE=dev
-            PORT=8085
+            PORT=${{env.PORT}}
           else
             echo "Invalid branch name. Exiting..."
             exit 1
