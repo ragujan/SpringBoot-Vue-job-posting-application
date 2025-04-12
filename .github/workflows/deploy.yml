@@ -3,7 +3,7 @@ name: build and deploy job posting app backend
 on:
   push:
     branches:
-      - dev
+      - testrag
 
 jobs:
   build-deploy:
