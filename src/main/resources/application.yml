@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: Helahelpers
+  datasource:
+    url: jdbc:postgresql://localhost:5432/job_posting_app
+    username: postgres
+    password: ragJN100Mania
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        id:
+          new_generator_mappings: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  config:
+    additional-location: classpath:/application-log.yml
+
+jwt:
+  secret: javainuse
+
+server:
+  port: 8084
+
+evx:
+  openapi:
+    dev-url: http://localhost:8084
+    prod-url: http://localhost:8084
+    title: Hela helpers API
+    version: 1.0
+    mail: kannadhasanragujan@gmail.com
+    org: wagmibuilders
+    license:
+      type: MIT
+      desc: This API exposes endpoints to manage my city application.
+
+# Actuator settings
+management:
+  endpoint:
+    logfile:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  server:
+    port: 9000
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.wagmibuilders.helahelpers: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    path: /
+    name: /logs/myapp.log
+  logback:
+    rollingpolicy:
+      max-history: 30
+      file-name-pattern: /logs/myapp.%d{yyyy-MM-dd}.%i.log
+    max-file-size: 30MB
+
+zoneId: Asia/Colombo

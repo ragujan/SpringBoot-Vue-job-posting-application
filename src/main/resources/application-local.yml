@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/job_posting_app
+    username: postgres
+    password: ragJN100Mania
+    driver-class-name: org.postgresql.Driver
+    hikari.maximum-pool-size: 20
+    hikari.connection-timeout: 30000
+    hikari.idle-timeout: 600000
+    hikari.max-lifetime: 1800000
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    hibernate:
+      # don't change this property
+      ddl-auto: update
+#      ddl-auto: create-drop
+    show-sql: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.wagmibuilders.helahelpers: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    path: /
+    name: /logs/myapp.log
+  logback:
+    rollingpolicy:
+      max-history: 30
+      file-name-pattern: /logs/myapp.%d{yyyy-MM-dd}.%i.log
+    max-file-size: 30MB
+
+

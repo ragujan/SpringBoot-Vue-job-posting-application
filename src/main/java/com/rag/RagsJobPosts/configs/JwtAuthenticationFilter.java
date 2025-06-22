@@ -1,7 +1,12 @@
 package com.rag.RagsJobPosts.configs;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,58 +25,60 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter{
-	private final HandlerExceptionResolver handlerExceptionResolver;
-	
+@Slf4j
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
     private final UserDetailsService userDetailsService;
     private final JwtService jwtTokenUtil;
-    
+
     public JwtAuthenticationFilter(
             JwtService jwtTokenUtil,
             UserDetailsService userDetailsService,
             HandlerExceptionResolver handlerExceptionResolver
-        ) {
-            this.jwtTokenUtil =jwtTokenUtil;
-            this.userDetailsService = userDetailsService;
-            this.handlerExceptionResolver = handlerExceptionResolver;
-        }
+    ) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
-	
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		
-		final String authHeader = request.getHeader("Authorization");
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        log.info("request to "+request.getRequestURI());
+        final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-        
-        try {
-			final String jwt = authHeader.substring(7);
-			final String username = jwtTokenUtil.getUsernameFromToken(jwt);
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if(username !=null && authentication == null) {
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-				
-				if(jwtTokenUtil.validateToken(jwt, userDetails.getUsername())) {
-					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-							
-							userDetails, null, userDetails.getAuthorities());
-					
 
+        try {
+            final String jwt = authHeader.substring(7);
+            final String username = jwtTokenUtil.getUsernameFromToken(jwt);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (username != null && authentication == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                if (jwtTokenUtil.validateToken(jwt, userDetails.getUsername())) {
+
+                    List<GrantedAuthority> authorities = jwtTokenUtil.getRolesFromToken(jwt).stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                            .collect(Collectors.toList());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, authorities
+                    );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-				}
-			}
+                }
+            }
 
-			filterChain.doFilter(request, response);
-		} catch (Exception exception) {
-			// TODO: handle exception
-			handlerExceptionResolver.resolveException(request, response, null, exception);
-		}
-		// TODO Auto-generated method stub
-		
-	}
+            filterChain.doFilter(request, response);
+        } catch (Exception exception) {
+            handlerExceptionResolver.resolveException(request, response, null, exception);
+        }
+
+    }
 
 }

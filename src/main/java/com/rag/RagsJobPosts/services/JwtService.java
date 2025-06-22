@@ -2,11 +2,11 @@ package com.rag.RagsJobPosts.services;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,72 +20,86 @@ import io.fusionauth.jwt.hmac.HMACVerifier;
 
 @Service
 public class JwtService implements Serializable {
-	private static final long serialVersionUID = -2550185165626007488L;
-	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    private static final long serialVersionUID = -2550185165626007488L;
+    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-	@Value("${jwt.secret}")
-	private String secret;
+    @Value("${jwt.secret}")
+    private String secret;
 
+    @Value("${zoneId}")
+    private String zoneId;
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, "username").toString();
+    }
 
+    // retrieve all claims from a token
+    private Map<String, Object> getAllClaimsFromToken(String token) {
+        // Build an HMC verifier using the same secret that was used to sign the JWT
+        Verifier verifier = HMACVerifier.newVerifier(secret);
 
-	public String getUsernameFromToken(String token) {
-		return getClaimFromToken(token, "username").toString();
-	}
+        // Verify and decode the encoded string JWT to a rich object
+        JWT jwt = JWT.getDecoder().decode(token, verifier);
+        return jwt.getAllClaims();
+    }
 
-	// retrieve all claims from a token
-	private Map<String, Object> getAllClaimsFromToken(String token) {
-		// Build an HMC verifier using the same secret that was used to sign the JWT
-		Verifier verifier = HMACVerifier.newVerifier(secret);
+    public Object getClaimFromToken(String token, String claim) {
+        return getAllClaimsFromToken(token).get(claim);
+    }
 
-		// Verify and decode the encoded string JWT to a rich object
-		JWT jwt = JWT.getDecoder().decode(token, verifier);
-		return jwt.getAllClaims();
-	}
+    // get expriration date from token
+    public ZonedDateTime getExpirationDateFromToken(String token) {
+        Object object = getAllClaimsFromToken(token).get("exp");
+        ZonedDateTime expiryDateTime = (ZonedDateTime) object;
+        return expiryDateTime;
 
-	public Object getClaimFromToken(String token, String claim) {
-		return getAllClaimsFromToken(token).get(claim);
-	}
+    }
 
-	// get expriration date from token
-	public ZonedDateTime getExpirationDateFromToken(String token) {
-		Object object = getAllClaimsFromToken(token).get("exp");
-		ZonedDateTime expiryDateTime = (ZonedDateTime) object;
-		return expiryDateTime;
+    // check if the token has expired
+    private Boolean isTokenExpired(String token) {
+        final ZonedDateTime expirationDate = getExpirationDateFromToken(token);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(zoneId));
+        return expirationDate.isBefore(now);
+    }
 
-	}
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
 
-	// check if the token has expired
-	private Boolean isTokenExpired(String token) {
-		final ZonedDateTime expirationDate = getExpirationDateFromToken(token);
-		return expirationDate.isAfter(ZonedDateTime.now());
-	}
+        // Build an HMAC signer using a SHA-256 hash
+        Signer signer = HMACSigner.newSHA256Signer(secret);
 
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
+        // Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and
+        // expiration(exp)
+        JWT jwt = new JWT().setIssuer("www.ragbag.com").setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
+                .setSubject(subject)
+                .addClaim("user", claims.get("user"))
+                .addClaim("username", claims.get("username"))
+                .addClaim("roles", claims.get("roles"))
+                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
 
-		// Build an HMAC signer using a SHA-256 hash
-		Signer signer = HMACSigner.newSHA256Signer(secret);
+        String encodedJWT = JWT.getEncoder().encode(jwt, signer);
+        return encodedJWT;
 
-		// Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and
-		// expiration(exp)
-		JWT jwt = new JWT().setIssuer("www.ragbag.com").setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-				.setSubject(subject).addClaim("user", claims.get("user")).addClaim("username", claims.get("username"))
-				.setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
+    }
 
-		String encodedJWT = JWT.getEncoder().encode(jwt, signer);
-		return encodedJWT;
+    public List<String> getRolesFromToken(String token) {
+        Object rolesClaim = getAllClaimsFromToken(token).get("roles");
+        if (rolesClaim instanceof List<?>) {
+            return ((List<?>) rolesClaim).stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
 
-	}
+    public String generateToken(String username, List<String> roles) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", username);
+        claims.put("roles", roles);
+        String subject = "testSubject";
+        return doGenerateToken(claims, subject);
+    }
 
-	public String generateToken(String username) {
-		Map<String, Object> claims = new HashMap<>();
-		claims.put("user", "admin");
-		claims.put("username", username);
-		String subject = "testSubject";
-		return doGenerateToken(claims, subject);
-	}
-
-	public Boolean validateToken(String token, String username) {
-		final String retrievedUsername = getUsernameFromToken(token);
-		return (username.equals(retrievedUsername) && !isTokenExpired(token));
-	}
+    public Boolean validateToken(String token, String username) {
+        final String retrievedUsername = getUsernameFromToken(token);
+        return (username.equals(retrievedUsername) && !isTokenExpired(token));
+    }
 }

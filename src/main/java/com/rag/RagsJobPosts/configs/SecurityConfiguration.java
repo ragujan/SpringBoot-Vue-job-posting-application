@@ -31,7 +31,10 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
-						requests -> requests.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
+						requests -> requests.requestMatchers("/auth/**")
+								.permitAll()
+								.requestMatchers("/admin/**").hasRole("ADMIN")
+								.anyRequest().authenticated())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -39,34 +42,4 @@ public class SecurityConfiguration {
 		return http.build();
 	}
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//
-//        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-//        configuration.setAllowedMethods(List.of("GET","POST"));
-//        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//        source.registerCorsConfiguration("/**",configuration);
-//
-//        return source;
-//    }
-
-//	@Bean
-//	CorsConfigurationSource corsConfigurationSource() {
-//		System.out.println("Cors Configuration");
-//		CorsConfiguration configuration = new CorsConfiguration();
-//
-//		configuration.setAllowedOrigins(List.of("http://localhost:8020","http://localhost:5173"));
-//		configuration.setAllowedMethods(List.of("GET", "POST"));
-//		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-//
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//		source.registerCorsConfiguration("/**", configuration);
-//
-//		return source;
-//	}
 }

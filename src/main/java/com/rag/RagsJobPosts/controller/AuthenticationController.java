@@ -1,7 +1,10 @@
 package com.rag.RagsJobPosts.controller;
 
 import java.time.ZonedDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.rag.RagsJobPosts.dto.RegisterAdminDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +24,10 @@ import io.fusionauth.jwt.JWTUtils;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
-    private final JwtService jwtService;
-    
+
     private final AuthenticationService authenticationService;
 
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
     
@@ -41,19 +42,19 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(registeredUser);
     }
-
+    @PostMapping("/register-admin")
+    public ResponseEntity<UserEntity> registerAdmin(@RequestBody RegisterAdminDto registerAdminDto) {
+        UserEntity registeredUser = authenticationService.registerAdmin(registerAdminDto);
+        return ResponseEntity.ok(registeredUser);
+    }
+    @PostMapping("/login-admin")
+    public ResponseEntity<LoginResponse> loginAdmin(@RequestBody LoginUserDto loginUserDto) {
+        LoginResponse authenticatedUser = authenticationService.authenticateAdmin(loginUserDto);
+        return ResponseEntity.ok(authenticatedUser);
+    }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        UserEntity authenticatedUser = authenticationService.authenticate(loginUserDto);
-
-        String jwtToken = jwtService.generateToken(authenticatedUser.getUsername());
-        ZonedDateTime expiryTime = jwtService.getExpirationDateFromToken(jwtToken);
-
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(expiryTime.toInstant().toEpochMilli());
-
-//        .setToken(jwtToken).setExpiresIn(jwtService.getExpirationDateFromToken(jwtToken))
-        return ResponseEntity.ok(loginResponse);
+        LoginResponse authenticatedUser = authenticationService.authenticate(loginUserDto);
+        return ResponseEntity.ok(authenticatedUser);
     }
 }
