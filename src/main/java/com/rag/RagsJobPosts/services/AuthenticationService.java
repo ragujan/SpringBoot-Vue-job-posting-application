@@ -1,16 +1,20 @@
 package com.rag.RagsJobPosts.services;
 
-import com.rag.RagsJobPosts.dto.LoginResponse;
-import com.rag.RagsJobPosts.dto.RegisterAdminDto;
+import com.rag.RagsJobPosts.dto.*;
 import com.rag.RagsJobPosts.exceptions.ResourceNotFoundException;
+import com.rag.RagsJobPosts.mapper.EmployerMapper;
+import com.rag.RagsJobPosts.models.Company;
+import com.rag.RagsJobPosts.models.Employer;
+import com.rag.RagsJobPosts.repository.CompanyRepository;
+import com.rag.RagsJobPosts.repository.EmployerRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.rag.RagsJobPosts.dto.LoginUserDto;
-import com.rag.RagsJobPosts.dto.RegisterUserDto;
 import com.rag.RagsJobPosts.models.UserEntity;
 import com.rag.RagsJobPosts.repository.UserRepository;
 
@@ -22,6 +26,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AuthenticationService {
     private final UserRepository userRepository;
     
@@ -30,8 +35,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
+    @Lazy
+    private final CompanyRepository companyRepository;
+    @Lazy
+    private final EmployerRepository employerRepository;
 
-    
+    private final EmployerMapper employerMapper;
+//    private final Employer companyRepository;
+
+
+
+
     public UserEntity signup(RegisterUserDto input) {
         UserEntity user = new UserEntity();
                 user.setPassword(passwordEncoder.encode(input.getPassword()));
@@ -41,6 +55,27 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
+    public EmployerRegisterResponseDTO registerEmployer(RegisterEmployerDto employerDto) {
+        UserEntity user = new UserEntity();
+        Long companyId = employerDto.getCompanyId();
+        Company company = companyRepository.findById(companyId).orElseThrow(()->{
+            log.error("Company is not found for id {}", companyId);
+            return new ResourceNotFoundException("Company is not found for id "+companyId);
+        });
+
+        user.setPassword(passwordEncoder.encode(employerDto.getPassword()));
+        user.setUsername(employerDto.getUsername());
+        user.setEmail(employerDto.getEmail());
+        user.setRoles(List.of("USER","JOB_POSTER"));
+        UserEntity userEntity = userRepository.save(user);
+
+        Employer employer = new Employer();
+        employer.setCompany(company);
+        employer.setUser(userEntity);
+        employer.setVerifiedByCompany(false);
+        employerRepository.save(employer);
+        return employerMapper.entityToRegisterResponseDTO(employer);
+    }
     public UserEntity registerAdmin(RegisterAdminDto adminDto) {
         UserEntity user = new UserEntity();
         user.setPassword(passwordEncoder.encode(adminDto.getPassword()));

@@ -4,7 +4,8 @@ import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.rag.RagsJobPosts.dto.RegisterAdminDto;
+import com.rag.RagsJobPosts.dto.*;
+import com.rag.RagsJobPosts.models.Employer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rag.RagsJobPosts.dto.LoginResponse;
-import com.rag.RagsJobPosts.dto.LoginUserDto;
-import com.rag.RagsJobPosts.dto.RegisterUserDto;
 import com.rag.RagsJobPosts.models.UserEntity;
 import com.rag.RagsJobPosts.services.AuthenticationService;
 import com.rag.RagsJobPosts.services.JwtService;
@@ -46,6 +44,11 @@ public class AuthenticationController {
     public ResponseEntity<UserEntity> registerAdmin(@RequestBody RegisterAdminDto registerAdminDto) {
         UserEntity registeredUser = authenticationService.registerAdmin(registerAdminDto);
         return ResponseEntity.ok(registeredUser);
+    }
+    @PostMapping("/register-employer")
+    public ResponseEntity<EmployerRegisterResponseDTO> registerEmployer(@RequestBody RegisterEmployerDto registerEmployerDto) {
+        EmployerRegisterResponseDTO registerResponseDTO = authenticationService.registerEmployer(registerEmployerDto);
+        return ResponseEntity.ok(registerResponseDTO);
     }
     @PostMapping("/login-admin")
     public ResponseEntity<LoginResponse> loginAdmin(@RequestBody LoginUserDto loginUserDto) {

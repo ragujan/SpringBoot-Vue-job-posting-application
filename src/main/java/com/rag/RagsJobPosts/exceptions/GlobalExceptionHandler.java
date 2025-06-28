@@ -27,10 +27,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         Map<String, Object> errorBody = new HashMap<>();
         errorBody.put("timestamp", LocalDateTime.now());
-        errorBody.put("message", "Email or Username already exists.");
+        errorBody.put("message", ex.getMessage());
         errorBody.put("status", HttpStatus.CONFLICT.value());
         errorBody.put("error", "Conflict");
 
         return new ResponseEntity<>(errorBody, HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> illegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("message", ex.getMessage());
+        errorBody.put("status", HttpStatus.BAD_REQUEST.value());
+        errorBody.put("error", "Illegal Argument");
+
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 }
