@@ -34,6 +34,7 @@ public class SecurityConfiguration {
 						requests -> requests.requestMatchers("/auth/**")
 								.permitAll()
 								.requestMatchers("/admin/**").hasRole("ADMIN")
+								.requestMatchers("/job-posts/**").hasRole("JOB_POSTER")
 								.anyRequest().authenticated())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider)

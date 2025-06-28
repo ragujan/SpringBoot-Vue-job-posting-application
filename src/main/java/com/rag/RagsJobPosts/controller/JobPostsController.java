@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/admin/job-posts")
+@RequestMapping("/job-posts")
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('JOB_POSTER')")
 @EnableMethodSecurity(prePostEnabled = true)
 public class JobPostsController {
 
