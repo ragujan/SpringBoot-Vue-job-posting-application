@@ -25,17 +25,21 @@ jwt:
 server:
   port: 8084
 
-evx:
+tms:
   openapi:
-    dev-url: http://localhost:8084
-    prod-url: http://localhost:8084
-    title: Hela helpers API
-    version: 1.0
-    mail: kannadhasanragujan@gmail.com
-    org: wagmibuilders
+    devUrl: "https:///"
+    uatUrl: "https:///"
+    prodUrl: "https://"
+    contactEmail: "admin@ragbag.com"
+    organization: ""
+    website: "https://ragbag.com"
+    title: "RealIn"
+    version: "1.0.0"
     license:
-      type: MIT
-      desc: This API exposes endpoints to manage my city application.
+      type: "Apache 2.0"
+      description: "TMS License"
+      termsOfService: ""
+    local-url: "http://localhost:8084"
 
 # Actuator settings
 management:
