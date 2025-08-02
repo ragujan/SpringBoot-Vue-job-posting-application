@@ -1,11 +1,6 @@
 package com.rag.RagsJobPosts.controller;
 
-import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.rag.RagsJobPosts.dto.*;
-import com.rag.RagsJobPosts.models.Employer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rag.RagsJobPosts.models.UserEntity;
 import com.rag.RagsJobPosts.services.AuthenticationService;
 import com.rag.RagsJobPosts.services.JwtService;
-
-import io.fusionauth.jwt.JWTUtils;
 
 @RequestMapping("/auth")
 @RestController
