@@ -43,4 +43,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DeletionFailedException.class)
+    public ResponseEntity<Map<String, Object>> deletionFailedException(DeletionFailedException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("message", ex.getMessage());
+        errorBody.put("status", HttpStatus.BAD_GATEWAY.value());
+        errorBody.put("error", "Deletion failed ");
+
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_GATEWAY);
+    }
 }

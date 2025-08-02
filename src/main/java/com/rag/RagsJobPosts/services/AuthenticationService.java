@@ -4,7 +4,7 @@ import com.rag.RagsJobPosts.dto.*;
 import com.rag.RagsJobPosts.exceptions.ResourceNotFoundException;
 import com.rag.RagsJobPosts.mapper.EmployerMapper;
 import com.rag.RagsJobPosts.models.Company;
-import com.rag.RagsJobPosts.models.Employer;
+import com.rag.RagsJobPosts.models.JobPoster;
 import com.rag.RagsJobPosts.repository.CompanyRepository;
 import com.rag.RagsJobPosts.repository.EmployerRepository;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,6 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +40,7 @@ public class AuthenticationService {
     private final EmployerRepository employerRepository;
 
     private final EmployerMapper employerMapper;
-//    private final Employer companyRepository;
+//    private final JobPoster companyRepository;
 
 
 
@@ -69,12 +68,12 @@ public class AuthenticationService {
         user.setRoles(List.of("USER","JOB_POSTER"));
         UserEntity userEntity = userRepository.save(user);
 
-        Employer employer = new Employer();
-        employer.setCompany(company);
-        employer.setUser(userEntity);
-        employer.setVerifiedByCompany(false);
-        employerRepository.save(employer);
-        return employerMapper.entityToRegisterResponseDTO(employer);
+        JobPoster jobPoster = new JobPoster();
+        jobPoster.setCompany(company);
+        jobPoster.setUser(userEntity);
+        jobPoster.setVerifiedByCompany(false);
+        employerRepository.save(jobPoster);
+        return employerMapper.entityToRegisterResponseDTO(jobPoster);
     }
     public UserEntity registerAdmin(RegisterAdminDto adminDto) {
         UserEntity user = new UserEntity();

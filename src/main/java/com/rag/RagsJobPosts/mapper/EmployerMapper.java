@@ -1,7 +1,7 @@
 package com.rag.RagsJobPosts.mapper;
 
 import com.rag.RagsJobPosts.dto.EmployerRegisterResponseDTO;
-import com.rag.RagsJobPosts.models.Employer;
+import com.rag.RagsJobPosts.models.JobPoster;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,5 +9,5 @@ import org.mapstruct.Mapping;
 public interface EmployerMapper {
 
     @Mapping(source = "user",target = "userRegisterResponseDTO")
-    EmployerRegisterResponseDTO entityToRegisterResponseDTO(Employer employer);
+    EmployerRegisterResponseDTO entityToRegisterResponseDTO(JobPoster jobPoster);
 }
