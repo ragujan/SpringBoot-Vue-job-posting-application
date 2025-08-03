@@ -90,7 +90,7 @@ public class JwtService implements Serializable {
         return Collections.emptyList();
     }
 
-    public String generateToken(String username, List<String> roles) {
+    public String generateToken(String username, Set<String> roles) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", username);
         claims.put("roles", roles);

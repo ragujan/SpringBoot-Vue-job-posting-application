@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RegisterEmployerDto {
+public class RegisterJobPosterDto {
     private String email;
     private String password;
     private String username;

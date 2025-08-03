@@ -39,8 +39,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(registeredUser);
     }
     @PostMapping("/register-employer")
-    public ResponseEntity<EmployerRegisterResponseDTO> registerEmployer(@RequestBody RegisterEmployerDto registerEmployerDto) {
-        EmployerRegisterResponseDTO registerResponseDTO = authenticationService.registerEmployer(registerEmployerDto);
+    public ResponseEntity<JobPosterRegisterResponseDTO> registerEmployer(@RequestBody RegisterJobPosterDto registerJobPosterDto) {
+        JobPosterRegisterResponseDTO registerResponseDTO = authenticationService.registerJobPoster(registerJobPosterDto);
         return ResponseEntity.ok(registerResponseDTO);
     }
     @PostMapping("/login-admin")

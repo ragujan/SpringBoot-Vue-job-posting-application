@@ -11,7 +11,7 @@ import com.rag.RagsJobPosts.models.UserEntity;
 
 @Repository
 //public interface  UserRepository  extends JpaRepository<UserEntity, Long> {
-public interface  UserRepository  extends CrudRepository<UserEntity, Long> {
+public interface  UserRepository  extends JpaRepository<UserEntity, Long> {
    Optional<UserEntity> findByUsername(String username);
    Optional<UserEntity> findByEmail(String email);
 }
