@@ -2,11 +2,11 @@ package com.rag.RagsJobPosts.services;
 
 import com.rag.RagsJobPosts.dto.*;
 import com.rag.RagsJobPosts.exceptions.ResourceNotFoundException;
-import com.rag.RagsJobPosts.mapper.EmployerMapper;
+import com.rag.RagsJobPosts.mapper.JobPosterMapper;
 import com.rag.RagsJobPosts.models.Company;
 import com.rag.RagsJobPosts.models.JobPoster;
 import com.rag.RagsJobPosts.repository.CompanyRepository;
-import com.rag.RagsJobPosts.repository.EmployerRepository;
+import com.rag.RagsJobPosts.repository.JobPosterRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -20,8 +20,8 @@ import com.rag.RagsJobPosts.repository.UserRepository;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -37,9 +37,9 @@ public class AuthenticationService {
     @Lazy
     private final CompanyRepository companyRepository;
     @Lazy
-    private final EmployerRepository employerRepository;
+    private final JobPosterRepository jobPosterRepository;
 
-    private final EmployerMapper employerMapper;
+    private final JobPosterMapper jobPosterMapper;
 //    private final JobPoster companyRepository;
 
 
@@ -54,7 +54,7 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    public EmployerRegisterResponseDTO registerEmployer(RegisterEmployerDto employerDto) {
+    public JobPosterRegisterResponseDTO registerJobPoster(RegisterJobPosterDto employerDto) {
         UserEntity user = new UserEntity();
         Long companyId = employerDto.getCompanyId();
         Company company = companyRepository.findById(companyId).orElseThrow(()->{
@@ -65,22 +65,22 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(employerDto.getPassword()));
         user.setUsername(employerDto.getUsername());
         user.setEmail(employerDto.getEmail());
-        user.setRoles(List.of("USER","JOB_POSTER"));
+        user.setRoles(Set.of("USER","JOB_POSTER"));
         UserEntity userEntity = userRepository.save(user);
 
         JobPoster jobPoster = new JobPoster();
         jobPoster.setCompany(company);
         jobPoster.setUser(userEntity);
         jobPoster.setVerifiedByCompany(false);
-        employerRepository.save(jobPoster);
-        return employerMapper.entityToRegisterResponseDTO(jobPoster);
+        jobPosterRepository.save(jobPoster);
+        return jobPosterMapper.entityToRegisterResponseDTO(jobPoster);
     }
     public UserEntity registerAdmin(RegisterAdminDto adminDto) {
         UserEntity user = new UserEntity();
         user.setPassword(passwordEncoder.encode(adminDto.getPassword()));
         user.setUsername(adminDto.getUsername());
         user.setEmail(adminDto.getEmail());
-        user.setRoles(List.of("ADMIN","USER","JOB_POSTER","JOB_SEEKER"));
+        user.setRoles(Set.of("ADMIN","USER","JOB_POSTER","JOB_SEEKER"));
         return userRepository.save(user);
     }
     public LoginResponse authenticate(LoginUserDto input) {
@@ -92,8 +92,11 @@ public class AuthenticationService {
         );
         UserEntity entity = userRepository.findByUsername(input.getUsername())
                 .orElseThrow(() -> new RuntimeException("Resource not found"));
-        List<String> roles = new LinkedList<>();
-        roles.add("user");
+        Set<String> roles = new HashSet<>();
+//        roles.add("user");
+        if(!entity.getRoles().isEmpty()){
+            roles = entity.getRoles();
+        }
         String jwtToken = jwtService.generateToken(entity.getUsername(),roles);
         ZonedDateTime expiryTime = jwtService.getExpirationDateFromToken(jwtToken);
 
@@ -114,7 +117,7 @@ public class AuthenticationService {
         );
         UserEntity entity = userRepository.findByUsername(input.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("user is not found for this"));
-        List<String>roles = entity.getRoles();
+        Set<String>roles = entity.getRoles();
         String jwtToken = jwtService.generateToken(entity.getUsername(),roles);
         ZonedDateTime expiryTime = jwtService.getExpirationDateFromToken(jwtToken);
 

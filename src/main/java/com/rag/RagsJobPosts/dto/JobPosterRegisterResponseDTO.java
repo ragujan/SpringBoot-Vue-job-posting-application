@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployerRegisterResponseDTO {
+public class JobPosterRegisterResponseDTO {
     private Long id;
     private Company company;
     private UserRegisterResponseDTO userRegisterResponseDTO;
