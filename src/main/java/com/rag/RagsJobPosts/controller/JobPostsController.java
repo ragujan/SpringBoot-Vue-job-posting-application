@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,19 +29,24 @@ public class JobPostsController {
     private final JobPosterService jobPosterService;
 
     @GetMapping("/created-by/job-poster")
-    public ResponseEntity<Page<JobPostDto>> getAllJobPosts(@RequestHeader(name = "Authorization",required = false) @Parameter(hidden = true) String authToken, Pageable pageable){
+    public ResponseEntity<Page<JobPostDto>> getAllJobPosts(@RequestHeader(name = "Authorization", required = false) @Parameter(hidden = true) String authToken, Pageable pageable) {
         String username = jwtService.getUsernameFromToken(authToken.substring(7));
         Company company = jobPosterService.getCompanyOfJobPoster(username);
-        return ResponseEntity.ok(jobPostService.listAllJobPostsByCompany(pageable,company.getId()));
+        return ResponseEntity.ok(jobPostService.listAllJobPostsByCompany(pageable, company.getId()));
     }
-    @GetMapping("/filter")
-    public ResponseEntity<Page<JobPostDto>> filterJobPosts(JobPostFilterDTO jobPostFilter){
-        return null;
+
+    @PostMapping("/filter")
+    public ResponseEntity<Page<JobPostDto>> filterJobPosts(@RequestBody JobPostFilterDTO jobPostFilter,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(jobPostService.filterJobPosts(jobPostFilter, pageable));
     }
 
 
     @PostMapping("/create")
-    public ResponseEntity<JobPostDto> createJobPost(@RequestBody CreateJobPostDto createDTO){
+    public ResponseEntity<JobPostDto> createJobPost(@RequestBody CreateJobPostDto createDTO) {
         return ResponseEntity.ok(jobPostService.createJobPost(createDTO));
     }
 

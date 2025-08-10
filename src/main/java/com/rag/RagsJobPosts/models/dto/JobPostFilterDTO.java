@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class JobPostFilterDTO {
     private String title;
     private String description;
     private String techCategory;
+    private List<Long> techStacks;
     private ExpLevel expLevel;
     private Integer hoursPostedAfter;
     private Integer daysPostedAfter;

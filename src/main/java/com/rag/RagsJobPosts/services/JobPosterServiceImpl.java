@@ -7,7 +7,7 @@ import com.rag.RagsJobPosts.models.Company;
 import com.rag.RagsJobPosts.models.JobPoster;
 import com.rag.RagsJobPosts.models.UserEntity;
 import com.rag.RagsJobPosts.models.dto.JobPostDto;
-import com.rag.RagsJobPosts.models.dto.JobPostFilter;
+import com.rag.RagsJobPosts.models.dto.JobPostFilterDTO;
 import com.rag.RagsJobPosts.models.dto.JobPosterDTO;
 import com.rag.RagsJobPosts.models.enums.Roles;
 import com.rag.RagsJobPosts.repository.JobPosterRepository;
@@ -58,7 +58,7 @@ public class JobPosterServiceImpl implements JobPosterService {
     }
 
     @Override
-    public Page<JobPostDto> filterJobPosts(JobPostFilter filter) {
+    public Page<JobPostDto> filterJobPosts(JobPostFilterDTO filter) {
         return null;
     }
 

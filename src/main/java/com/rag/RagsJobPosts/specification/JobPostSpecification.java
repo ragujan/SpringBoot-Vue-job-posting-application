@@ -1,8 +1,13 @@
 package com.rag.RagsJobPosts.specification;
 
 import com.rag.RagsJobPosts.models.JobPost;
+import com.rag.RagsJobPosts.models.TechStack;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.script.ScriptEngine;
+import java.util.List;
 
 
 public class JobPostSpecification {
@@ -20,7 +25,9 @@ public class JobPostSpecification {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("title"), "%" + filterDTO.getTitle() + "%"));
             }
             if(filterDTO.getTechStack()!=null && !filterDTO.getTechStack().isEmpty()){
-
+               Join<JobPost,TechStack> join = root.join("techStack");
+               List<Long> techStackIds = filterDTO.getTechStack().stream().map(TechStack::getId).toList();
+               predicate = criteriaBuilder.and(predicate, join.get("id").in(techStackIds));
             }
 
 
