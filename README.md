@@ -26,7 +26,7 @@ A RESTful job posting platform built with Spring Boot, enabling secure user regi
 - Java 17+
 - Spring Boot
 - Spring Security with JWT
-- Spring Data JPA (assumed for paging and persistence)
+- Spring Data JPA 
 - RESTful API design
 
 ## API Endpoints Overview
