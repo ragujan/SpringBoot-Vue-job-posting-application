@@ -79,9 +79,3 @@ A RESTful job posting platform built with Spring Boot, enabling secure user regi
 3. Build and run the application using Maven or your preferred IDE.
 4. Use a REST client (Postman, curl) to interact with the API.
 
-## Future Improvements
-
-- Implement the filtering logic for job posts.
-- Complete deletion endpoint for job posters.
-- Add Swagger/OpenAPI documentation.
-- Enhance error handling and validation.
