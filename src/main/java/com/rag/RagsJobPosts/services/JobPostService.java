@@ -15,6 +15,6 @@ public interface JobPostService {
     Page<JobPostDto> listAllJobPosts(Pageable pageable);
     JobPostDto findById(Long id);
     Page<JobPostDto> listAllJobPostsByCompany(Pageable pageable, Long companyId);
-    List<JobPostDto> filterJobPosts(JobPostFilterDTO filter);
+    Page<JobPostDto> filterJobPosts(JobPostFilterDTO filter, Pageable pageable);
 
 }
