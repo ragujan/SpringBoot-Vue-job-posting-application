@@ -6,9 +6,10 @@ import com.rag.RagsJobPosts.models.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JobPosterRepository extends JpaRepository<JobPoster,Long> {
     List<JobPoster> findByCompany(Company company);
-    JobPoster findByUser(UserEntity user);
+    Optional<JobPoster> findByUser(UserEntity userEntity);
     List<JobPoster> findByUserIn(List<UserEntity> ids);
 }

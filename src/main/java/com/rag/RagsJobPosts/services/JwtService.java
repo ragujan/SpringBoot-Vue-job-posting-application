@@ -32,6 +32,8 @@ public class JwtService implements Serializable {
         return getClaimFromToken(token, "username").toString();
     }
 
+
+
     // retrieve all claims from a token
     private Map<String, Object> getAllClaimsFromToken(String token) {
         // Build an HMC verifier using the same secret that was used to sign the JWT
