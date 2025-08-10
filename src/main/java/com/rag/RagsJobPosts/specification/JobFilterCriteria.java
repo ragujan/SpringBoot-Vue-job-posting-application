@@ -1,45 +1,27 @@
-package com.rag.RagsJobPosts.models;
+package com.rag.RagsJobPosts.specification;
 
+import com.rag.RagsJobPosts.models.Company;
+import com.rag.RagsJobPosts.models.JobPoster;
+import com.rag.RagsJobPosts.models.TechStack;
 import com.rag.RagsJobPosts.models.enums.ExpLevel;
 import com.rag.RagsJobPosts.models.enums.JobStatus;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
-@Table(name = "job_post")
-public class JobPost extends BaseEntity {
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+@AllArgsConstructor
+public class JobFilterCriteria {
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-
-    @ManyToOne
-    @JoinColumn(name = "job_poster_id")
+    private List<Company> company;
     private JobPoster jobPoster;
-
     private String title;
     private String description;
-
-    @OneToMany(fetch = FetchType.LAZY)
     private List<TechStack> techStack;
-
-    @Enumerated(EnumType.STRING)
     private ExpLevel expLevel;
-
-    @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-
-
 }

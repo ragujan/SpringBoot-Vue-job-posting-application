@@ -20,6 +20,10 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class UserEntity extends BaseEntity implements UserDetails {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     @Column(name = "username")
     @NotBlank
     private String username;
