@@ -38,6 +38,7 @@ public class JobPostServiceImpl implements JobPostService {
     private final JobPosterMapper jobPosterMapper;
     private final TechStackRepository techStackRepository;
 
+
     @Override
     public JobPostDto createJobPost(CreateJobPostDto createJobPostDto) {
         Long jobPosterId = createJobPostDto.getJobPosterId();
@@ -96,6 +97,8 @@ public class JobPostServiceImpl implements JobPostService {
         List<JobPostDto> jobPostDtos  = jobPosts.stream().map(jobPostMapper::entityToDTO).toList();
         return new PageImpl<>(jobPostDtos, pageable, jobPostDtos.size());
     }
+
+
 
 
 }
