@@ -1,6 +1,7 @@
 package com.rag.RagsJobPosts.controller;
 
 import com.rag.RagsJobPosts.models.Company;
+import com.rag.RagsJobPosts.models.TechStack;
 import com.rag.RagsJobPosts.models.dto.CreateJobPostDto;
 import com.rag.RagsJobPosts.models.dto.JobPostDto;
 import com.rag.RagsJobPosts.models.dto.JobPostFilterDTO;
@@ -18,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/job-posts")
 @RestController
 @PreAuthorize("hasRole('JOB_POSTER')")
@@ -28,7 +31,7 @@ public class JobPostsController {
     private final JwtService jwtService;
     private final JobPosterService jobPosterService;
 
-    @GetMapping("/created-by/job-poster")
+    @GetMapping("/created-by/job-poster/")
     public ResponseEntity<Page<JobPostDto>> getAllJobPosts(@RequestHeader(name = "Authorization", required = false) @Parameter(hidden = true) String authToken, Pageable pageable) {
         String username = jwtService.getUsernameFromToken(authToken.substring(7));
         Company company = jobPosterService.getCompanyOfJobPoster(username);
@@ -43,7 +46,6 @@ public class JobPostsController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(jobPostService.filterJobPosts(jobPostFilter, pageable));
     }
-
 
     @PostMapping("/create")
     public ResponseEntity<JobPostDto> createJobPost(@RequestBody CreateJobPostDto createDTO) {

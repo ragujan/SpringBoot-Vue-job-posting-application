@@ -1,5 +1,6 @@
 package com.rag.RagsJobPosts.services;
 
+import com.rag.RagsJobPosts.models.TechStack;
 import com.rag.RagsJobPosts.models.dto.CreateJobPostDto;
 import com.rag.RagsJobPosts.models.dto.JobPostDto;
 import com.rag.RagsJobPosts.models.dto.JobPostFilterDTO;
@@ -16,5 +17,4 @@ public interface JobPostService {
     JobPostDto findById(Long id);
     Page<JobPostDto> listAllJobPostsByCompany(Pageable pageable, Long companyId);
     Page<JobPostDto> filterJobPosts(JobPostFilterDTO filter, Pageable pageable);
-
 }
