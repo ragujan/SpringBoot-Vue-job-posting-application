@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface JobFilterMapper {
-    JobFilterCriteria dtoToCriteria(JobFilterCriteria criteria);
+    JobFilterCriteria dtoToCriteria(JobPostFilterDTO filterDTO);
 }

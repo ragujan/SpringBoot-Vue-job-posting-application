@@ -14,6 +14,7 @@ import java.util.List;
 public class JobPostFilterDTO {
     private Long id;
     private String CompanyName;
+    private String jobPosterName;
     private String title;
     private String description;
     private String techCategory;
