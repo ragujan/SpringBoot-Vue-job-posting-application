@@ -1,15 +1,14 @@
 package com.rag.RagsJobPosts.services;
 
 import com.rag.RagsJobPosts.exceptions.ResourceNotFoundException;
+import com.rag.RagsJobPosts.mapper.JobPostMapper;
 import com.rag.RagsJobPosts.mapper.JobPosterMapper;
-import com.rag.RagsJobPosts.models.BaseEntity;
-import com.rag.RagsJobPosts.models.Company;
-import com.rag.RagsJobPosts.models.JobPoster;
-import com.rag.RagsJobPosts.models.UserEntity;
+import com.rag.RagsJobPosts.models.*;
 import com.rag.RagsJobPosts.models.dto.JobPostDto;
 import com.rag.RagsJobPosts.models.dto.JobPostFilterDTO;
 import com.rag.RagsJobPosts.models.dto.JobPosterDTO;
 import com.rag.RagsJobPosts.models.enums.Roles;
+import com.rag.RagsJobPosts.repository.JobPostRepository;
 import com.rag.RagsJobPosts.repository.JobPosterRepository;
 import com.rag.RagsJobPosts.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,10 @@ public class JobPosterServiceImpl implements JobPosterService {
     private final JobPosterRepository repository;
     private final UserRepository userRepository;
     private final JobPosterMapper mapper;
+    private final JobPostMapper jobPostMapper;
     private final JobPosterRepository jobPosterRepository;
+
+    private final JobPostRepository jobPostRepository;
 
     @Override
     public Page<JobPosterDTO> getAllJobPosters(Pageable pageable) {
@@ -78,5 +80,21 @@ public class JobPosterServiceImpl implements JobPosterService {
         } else {
             return jobPoster.getCompany();
         }
+    }
+
+    @Override
+    public Page<JobPostDto> getJobPostsOfJobPoster(String username , Pageable pageable) {
+        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(() -> {
+            log.error("username not found {}", username);
+            return new ResourceNotFoundException("username not found " + username);
+        });
+
+        JobPoster jobPoster = jobPosterRepository.findByUser(userEntity).orElseThrow(() -> {
+            log.error("user is not a job poster {}", username);
+            return new ResourceNotFoundException("user is not a job poster " + username);
+        });
+       List<JobPost> jobPosts = jobPostRepository.findByJobPoster(jobPoster);
+       List<JobPostDto> jobPostDtos = jobPosts.stream().map(jobPostMapper::entityToDTO).toList();
+       return new PageImpl<>(jobPostDtos,pageable,jobPostDtos.size());
     }
 }
