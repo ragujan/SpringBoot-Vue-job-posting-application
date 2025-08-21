@@ -14,5 +14,5 @@ import java.util.Optional;
 @Repository
 public interface JobPostRepository extends JpaRepository<JobPost,Long>, JpaSpecificationExecutor<JobPost> {
     List<JobPost> findByCompany(Company company);
-    Optional<JobPost> findByJobPoster(JobPoster jobPoster);
+    List<JobPost> findByJobPoster(JobPoster jobPoster);
 }

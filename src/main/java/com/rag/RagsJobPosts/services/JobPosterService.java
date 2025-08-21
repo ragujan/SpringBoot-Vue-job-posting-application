@@ -15,4 +15,5 @@ public interface JobPosterService {
     public JobPosterDTO deleteJobPoster(Long userId);
     public Page<JobPostDto> filterJobPosts(JobPostFilterDTO filter);
     public Company getCompanyOfJobPoster(String username);
+    public Page<JobPostDto> getJobPostsOfJobPoster(String username, Pageable pageable);
 }
