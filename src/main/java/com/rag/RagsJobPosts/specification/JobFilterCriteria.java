@@ -17,13 +17,14 @@ import java.util.List;
 @NoArgsConstructor
 public class JobFilterCriteria {
     private Long id;
-    private List<Company> company;
+    private Company company;
     private JobPoster jobPoster;
     private String title;
     private String description;
     private List<TechStack> techStack;
     private ExpLevel expLevel;
     private JobStatus jobStatus;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAtStart;
+    private LocalDateTime createdAtEnd;
     private LocalDateTime updatedAt;
 }

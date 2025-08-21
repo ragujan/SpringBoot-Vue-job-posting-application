@@ -2,6 +2,7 @@ package com.rag.RagsJobPosts.services;
 
 import com.rag.RagsJobPosts.exceptions.ResourceNotFoundException;
 import com.rag.RagsJobPosts.mapper.CompanyMapper;
+import com.rag.RagsJobPosts.mapper.JobFilterMapper;
 import com.rag.RagsJobPosts.mapper.JobPostMapper;
 import com.rag.RagsJobPosts.mapper.JobPosterMapper;
 import com.rag.RagsJobPosts.models.Company;
@@ -37,6 +38,7 @@ public class JobPostServiceImpl implements JobPostService {
     private final CompanyMapper companyMapper;
     private final JobPosterMapper jobPosterMapper;
     private final TechStackRepository techStackRepository;
+    private  final JobFilterMapper jobFilterMapper;
 
 
     @Override
@@ -84,14 +86,16 @@ public class JobPostServiceImpl implements JobPostService {
 
     @Override
     public Page<JobPostDto> filterJobPosts(JobPostFilterDTO filter, Pageable pageable) {
-        JobFilterCriteria jobFilterCriteria = new JobFilterCriteria();
-        if (!filter.getTechCategory().isEmpty()) {
-            List<TechStack> techStacks = techStackRepository.findByNameContainingIgnoreCase(filter.getTechCategory());
-        }
+        JobFilterCriteria jobFilterCriteria = jobFilterMapper.dtoToCriteria(filter);
+//        if (!filter.getTechCategory().isEmpty()) {
+//            List<TechStack> techStacks = techStackRepository.findByNameContainingIgnoreCase(filter.getTechCategory());
+//            jobFilterCriteria.setTechStack(techStacks);
+//        }
         if (filter.getTechStacks() != null && !filter.getTechStacks().isEmpty()) {
             List<TechStack> techStacks = techStackRepository.findAllById(filter.getTechStacks());
             jobFilterCriteria.setTechStack(techStacks);
         }
+//        if(filter)
         Specification<JobPost> specification = JobPostSpecification.filterBy(jobFilterCriteria);
         List<JobPost> jobPosts = repository.findAll(specification);
         List<JobPostDto> jobPostDtos  = jobPosts.stream().map(jobPostMapper::entityToDTO).toList();
