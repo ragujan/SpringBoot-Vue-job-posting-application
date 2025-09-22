@@ -15,15 +15,16 @@ import java.util.List;
 
 @RequestMapping("/tech-stack")
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
 @EnableMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class TechStackController {
 
     private TechStackService techStackService;
 
     @GetMapping("/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'JOB_POSTER')")
     public ResponseEntity<List<TechStack>> getAllTechStacks() {
         log.info("get all tech stacks");
         return ResponseEntity.ok(techStackService.getAllTechStacks());
@@ -34,4 +35,12 @@ public class TechStackController {
         log.info("creating tech stack");
         return ResponseEntity.ok(techStackService.createTechStack(createDTO));
     }
+
+    @PostMapping("/create/batch")
+    public ResponseEntity<List<TechStack>> createTechStacks(@RequestBody List<CreateTechStackDTO> createDTOs) {
+        log.info("Creating multiple tech stacks, count: {}", createDTOs.size());
+        List<TechStack> createdStacks = techStackService.createTechStacks(createDTOs);
+        return ResponseEntity.ok(createdStacks);
+    }
+
 }

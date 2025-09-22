@@ -12,12 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JobPostFilterDTO {
-    private Long id;
     private String CompanyName;
     private String jobPosterName;
     private String title;
     private String description;
-    private String techCategory;
+    private TechCategory techCategory;
     private List<Long> techStacks;
     private ExpLevel expLevel;
     private Integer hoursPostedAfter;

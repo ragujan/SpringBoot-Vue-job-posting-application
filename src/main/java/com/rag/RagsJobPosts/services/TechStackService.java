@@ -8,4 +8,5 @@ import java.util.List;
 public interface TechStackService {
     List<TechStack> getAllTechStacks();
     TechStack createTechStack(CreateTechStackDTO stackDTO);
+    public List<TechStack> createTechStacks(List<CreateTechStackDTO> stackDTOs);
 }

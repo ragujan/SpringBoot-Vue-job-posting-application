@@ -19,13 +19,13 @@ public class JobPostSpecification {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("company"),filterDTO.getCompany()));
             }
             if (filterDTO.getDescription() != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("description"), "%" + filterDTO.getDescription() + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + filterDTO.getDescription().toLowerCase() + "%"));
             }
-            if (filterDTO.getJobPoster() != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("jobPoster"), filterDTO.getJobPoster()));
+            if (filterDTO.getJobPosters() != null) {
+                predicate = criteriaBuilder.and(predicate, root.get("jobPoster").in( filterDTO.getJobPosters()));
             }
             if (filterDTO.getTitle() != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("title"), "%" + filterDTO.getTitle() + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + filterDTO.getTitle().toLowerCase() + "%"));
             }
             if (filterDTO.getCreatedAtStart() != null && filterDTO.getCreatedAtEnd()!=null) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.between(root.get("createdAt"),  filterDTO.getCreatedAtStart() ,filterDTO.getCreatedAtEnd()));
@@ -33,8 +33,11 @@ public class JobPostSpecification {
             if (filterDTO.getJobStatus() != null ) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("jobStatus"),  filterDTO.getJobStatus() ));
             }
+            if (filterDTO.getExpLevel() != null ) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("expLevel"),  filterDTO.getExpLevel() ));
+            }
             if(filterDTO.getTechStack()!=null && !filterDTO.getTechStack().isEmpty()){
-               Join<JobPost,TechStack> join = root.join("techStack");
+               Join<JobPost,TechStack> join = root.join("techStacks");
                List<Long> techStackIds = filterDTO.getTechStack().stream().map(TechStack::getId).toList();
                predicate = criteriaBuilder.and(predicate, join.get("id").in(techStackIds));
             }

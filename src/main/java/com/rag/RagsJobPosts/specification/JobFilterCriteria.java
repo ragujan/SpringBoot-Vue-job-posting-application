@@ -16,9 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JobFilterCriteria {
-    private Long id;
     private Company company;
-    private JobPoster jobPoster;
+    private List<JobPoster> jobPosters;
     private String title;
     private String description;
     private List<TechStack> techStack;

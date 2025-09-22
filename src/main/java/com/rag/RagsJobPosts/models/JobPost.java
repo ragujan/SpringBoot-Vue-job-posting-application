@@ -28,18 +28,21 @@ public class JobPost extends BaseEntity {
     private String title;
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<TechStack> techStack;
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private List<TechStack> techStack;
+
+    @ManyToMany
+    @JoinTable(
+            name = "job_post_tech_stack",
+            joinColumns = @JoinColumn(name = "job_post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tech_stack_id")
+    )
+    private List<TechStack> techStacks;
 
     @Enumerated(EnumType.STRING)
     private ExpLevel expLevel;
 
     @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-
 
 }
