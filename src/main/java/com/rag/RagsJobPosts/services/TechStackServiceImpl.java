@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -34,5 +35,15 @@ public class TechStackServiceImpl implements TechStackService {
         techStack.setTechCategory(stackDTO.getTechCategory());
         return techStackRepository.save(techStack);
     }
-
+    @Override
+    public List<TechStack> createTechStacks(List<CreateTechStackDTO> stackDTOs) {
+        List<TechStack> techStacks = stackDTOs.stream()
+                .map(dto -> {
+                    TechStack techStack = mapper.createDTOToEntity(dto);
+                    techStack.setTechCategory(dto.getTechCategory());
+                    return techStack;
+                })
+                .collect(Collectors.toList());
+        return techStackRepository.saveAll(techStacks);
+    }
 }

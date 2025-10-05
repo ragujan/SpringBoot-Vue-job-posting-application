@@ -14,4 +14,8 @@ public interface JobPosterRepository extends JpaRepository<JobPoster,Long> {
     List<JobPoster> findByCompany(Company company);
     Optional<JobPoster> findByUser(UserEntity userEntity);
     List<JobPoster> findByUserIn(List<UserEntity> ids);
+
+    List<JobPoster> findByUser_UsernameIgnoreCase(String username);
+    List<JobPoster> findByUser_Username(String username);
+
 }

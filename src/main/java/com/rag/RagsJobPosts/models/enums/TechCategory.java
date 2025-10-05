@@ -5,6 +5,7 @@ public enum TechCategory {
     BACKEND,
     DEVOPS,
     DATABASE,
+    FULLSTACK,
     CLOUD,
     MOBILE,
     DATA_SCIENCE,
