@@ -1,6 +1,7 @@
 package com.rag.RagsJobPosts.controller;
 
 import com.rag.RagsJobPosts.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import com.rag.RagsJobPosts.services.JwtService;
 
 @RequestMapping("/auth")
 @RestController
+@Slf4j
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -45,6 +47,7 @@ public class AuthenticationController {
     }
     @PostMapping("/login-admin")
     public ResponseEntity<LoginResponse> loginAdmin(@RequestBody LoginUserDto loginUserDto) {
+        log.info("admin login");
         LoginResponse authenticatedUser = authenticationService.authenticateAdmin(loginUserDto);
         return ResponseEntity.ok(authenticatedUser);
     }
