@@ -16,5 +16,5 @@ public class CreateCompanyDto {
     private String industry;
     private String logoUrl;
     private String businessEmail;
-    private boolean isVerified;
+    private Boolean isVerified;
 }

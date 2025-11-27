@@ -27,6 +27,6 @@ public class Company {
     @Column(nullable = false, unique = true)
     private String businessEmail;
 
-    private boolean isVerified = false;
+    private Boolean isVerified = false;
 
 }

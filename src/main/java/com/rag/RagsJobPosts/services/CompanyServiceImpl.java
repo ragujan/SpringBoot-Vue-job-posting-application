@@ -35,7 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
             throw new IllegalArgumentException("Company name already exists");
         }
         Company company = companyMapper.toEntity(dto);
-        company.setVerified(false);
+        company.setIsVerified(false);
         Company saved = companyRepository.save(company);
         return companyMapper.toDto(saved);
     }
@@ -55,7 +55,7 @@ public class CompanyServiceImpl implements CompanyService {
             throw new IllegalArgumentException("Company name already exists");
         }
 
-        companyMapper.updateCompanyFromDto(dto, existing);
+         companyMapper.updateCompanyFromDto(dto, existing);
         Company updated = companyRepository.save(existing);
         return companyMapper.toDto(updated);
     }
